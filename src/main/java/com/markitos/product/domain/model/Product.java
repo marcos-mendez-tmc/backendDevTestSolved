@@ -1,4 +1,6 @@
-package com.markitos.product.model;
+package com.markitos.product.domain.model;
+
+import java.util.Objects;
 
 public class Product {
 
@@ -7,7 +9,8 @@ public class Product {
     private Double price;
     private Boolean availability;
 
-    public Product() {}
+    public Product() {
+    }
 
     public Product(String id, String name, Double price, Boolean availability) {
         this.id = id;
@@ -46,5 +49,17 @@ public class Product {
 
     public void setAvailability(Boolean availability) {
         this.availability = availability;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Product product)) return false;
+        return Objects.equals(id, product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

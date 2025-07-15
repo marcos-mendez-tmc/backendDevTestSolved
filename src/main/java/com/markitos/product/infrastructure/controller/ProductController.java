@@ -1,7 +1,7 @@
-package com.markitos.product.controller;
+package com.markitos.product.infrastructure.controller;
 
-import com.markitos.product.model.Product;
-import com.markitos.product.service.ProductService;
+import com.markitos.product.application.service.ProductService;
+import com.markitos.product.domain.model.Product;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
