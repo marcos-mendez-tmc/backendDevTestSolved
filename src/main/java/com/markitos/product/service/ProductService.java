@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.HttpClientErrorException;
 import java.util.concurrent.CompletableFuture;
 import org.springframework.scheduling.annotation.Async;
-
+import org.springframework.cache.annotation.Cacheable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,10 +15,16 @@ import java.util.List;
 @Service
 public class ProductService {
 
+    private final ProductCacheService cacheService;
     private final RestTemplate restTemplate = new RestTemplate();
     private final String baseUrl = "http://localhost:3001";
 
-   public List<Product> getSimilarProducts(String productId) {
+    
+    public ProductService(ProductCacheService cacheService) {
+        this.cacheService = cacheService;
+    }
+
+    public List<Product> getSimilarProducts(String productId) {
         List<Product> similarProducts = new ArrayList<>();
         try {
             ResponseEntity<String[]> response = restTemplate.getForEntity(
@@ -52,13 +58,14 @@ public class ProductService {
     @Async
     public CompletableFuture<Product> fetchProductById(String id) {
         try {
-            Product product = restTemplate.getForObject(baseUrl + "/product/" + id, Product.class);
-            return CompletableFuture.completedFuture(product);
+            Product cached = cacheService.fetchProductByIdSync(id);
+            return CompletableFuture.completedFuture(cached);
         } catch (Exception ex) {
-            System.out.println(" Error al obtener producto " + id + ": " + ex.getClass().getSimpleName() + " - " + ex.getMessage());
             return CompletableFuture.completedFuture(null);
         }
     }
+
+ 
 }
 
 
