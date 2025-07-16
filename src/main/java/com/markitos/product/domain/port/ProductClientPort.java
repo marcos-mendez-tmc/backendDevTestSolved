@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public interface ProductClientPort {
+    
+    List<String> getSimilarProducts(String productId);
 
     CompletableFuture<Product> getProductById(String productId);
-
-    List<String> getSimilarProducts(String productId);
 }
