@@ -1,9 +1,9 @@
 package com.markitos.product.infrastructure.client;
 
+import com.markitos.product.domain.exception.ProductNotFoundException;
 import com.markitos.product.domain.model.Product;
 import com.markitos.product.domain.port.ProductClientPort;
 import com.markitos.product.infrastructure.config.ExternalApiProperties;
-
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -49,7 +49,7 @@ public class ExternalProductClient implements ProductClientPort {
             );
             return CompletableFuture.completedFuture(product);
         } catch (HttpClientErrorException.NotFound e) {
-            return CompletableFuture.completedFuture(null);
+            throw new ProductNotFoundException( productId);
         }
     }
 }
