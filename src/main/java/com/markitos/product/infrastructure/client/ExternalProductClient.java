@@ -3,6 +3,8 @@ package com.markitos.product.infrastructure.client;
 import com.markitos.product.domain.model.Product;
 import com.markitos.product.domain.port.ProductClientPort;
 import com.markitos.product.infrastructure.config.ExternalApiProperties;
+
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -24,6 +26,7 @@ public class ExternalProductClient implements ProductClientPort {
     }
 
     @Override
+    @Cacheable(value = "similarProductIds", key = "#productId")
     public List<String> getSimilarProducts(String productId) {
         try {
             ResponseEntity<String[]> response = restTemplate.getForEntity(
@@ -38,6 +41,7 @@ public class ExternalProductClient implements ProductClientPort {
 
     @Async
     @Override
+    @Cacheable(value = "productById", key = "#productId")
     public CompletableFuture<Product> getProductById(String productId) {
         try {
             Product product = restTemplate.getForObject(
